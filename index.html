@@ -30,25 +30,34 @@ overflow:hidden;
 MENU
 ==========================*/
 #menu{
-width:100%;
-height:100%;
-overflow:auto;
-padding:20px;
-background:#000;
+    width:100%;
+    height:100%;
+    overflow:auto;
+    padding:20px;
+    background:#000;
 }
 
 #title{
-text-align:center;
-color:#FFD700;
-font-size:30px;
-font-weight:bold;
+    text-align:center;
+    color:#FFD700;
+    font-size:30px;
+    font-weight:bold;
 }
 
 #subtitle{
-text-align:center;
-margin-top:8px;
-margin-bottom:25px;
-font-size:22px;
+    text-align:center;
+    margin-top:8px;
+    margin-bottom:8px;
+    font-size:22px;
+}
+
+#stage{
+    text-align:center;
+    margin-top:0;
+    margin-bottom:25px;
+    font-size:22px;
+    color:#FFD700;
+    font-weight:bold;
 }
 
 #channelList{
@@ -209,38 +218,45 @@ color:#ff5555;
 RESPONSIVE
 ==========================*/
 @media(max-width:700px){
-#title{
-font-size:24px;
+
+    #title{
+        font-size:24px;
+    }
+
+    #subtitle{
+        font-size:18px;
+    }
+
+    #stage{
+        font-size:18px;
+        margin-bottom:20px;
+    }
+
+    .channelTitle{
+        font-size:19px;
+    }
+
+    .channelDate{
+        font-size:15px;
+    }
+
+    .channelMatch{
+        font-size:18px;
+    }
+
+    #status{
+        font-size:22px;
+    }
+
+    #timer{
+        font-size:46px;
+    }
+
+    #match{
+        font-size:20px;
+    }
 }
 
-#subtitle{
-font-size:18px;
-}
-
-.channelTitle{
-font-size:19px;
-}
-
-.channelDate{
-font-size:15px;
-}
-
-.channelMatch{
-font-size:18px;
-}
-
-#status{
-font-size:22px;
-}
-
-#timer{
-font-size:46px;
-}
-
-#match{
-font-size:20px;
-}
-}
 </style>
 </head>
 
@@ -251,14 +267,18 @@ MENU
 ====================================================== -->
 <div id="menu">
     <div id="title">
-        📺 TV LORONG MISTERIUS 212
-    </div>
+    📺 TV LORONG MISTERIUS 212
+</div>
 
-    <div id="subtitle">
-        🏆 FIFA WORLD CUP 2026
-    </div>
+<div id="subtitle">
+    🏆 FIFA WORLD CUP 2026
+</div>
 
-    <div id="channelList"></div>
+<div id="stage">
+    ⚽ Babak 16 Besar
+</div>
+
+<div id="channelList"></div>
 </div>
 
 <!-- ======================================================
@@ -274,9 +294,12 @@ PLAYER PAGE
         </h1>
         <br>
         <h2>
-            🏆 FIFA WORLD CUP 2026
-        </h2>
-        <br><br>
+    🏆 FIFA WORLD CUP 2026
+	</h2>
+	<h3 id="stage">
+    ⚽ Babak 16 Besar
+	</h3>
+	<br><br>
         <div id="status">
             ⏳ Siaran akan dimulai dalam
         </div>
@@ -901,16 +924,25 @@ function startCountdown(ch){
             ui.countdown.style.display="flex";
             ui.status.innerHTML=
                 "⏳ Siaran akan dimulai dalam";
-            const diff=playTime-now;
-            const h=Math.floor(diff/3600000);
-            const m=Math.floor((diff%3600000)/60000);
-            const s=Math.floor((diff%60000)/1000);
-            ui.timer.innerHTML=
-                String(h).padStart(2,"0")
-                +":"
-                +String(m).padStart(2,"0")
-                +":"
-                +String(s).padStart(2,"0");
+
+            const diff = playTime - now;
+
+const totalSeconds = Math.floor(diff / 1000);
+
+const days = Math.floor(totalSeconds / 86400);
+const hours = Math.floor((totalSeconds % 86400) / 3600);
+const minutes = Math.floor((totalSeconds % 3600) / 60);
+const seconds = totalSeconds % 60;
+
+const pad = n => String(n).padStart(2, "0");
+
+if (days > 0) {
+    ui.timer.innerHTML =
+        `${pad(days)}d : ${pad(hours)}h : ${pad(minutes)}m : ${pad(seconds)}s`;
+} else {
+    ui.timer.innerHTML =
+        `${pad(hours)}h : ${pad(minutes)}m : ${pad(seconds)}s`;
+}
             return;
         }
 
@@ -936,7 +968,7 @@ function startCountdown(ch){
         ui.countdown.style.display="flex";
         ui.status.innerHTML=
             "✅ Siaran telah selesai";
-        ui.timer.innerHTML="00:00:00";
+        ui.timer.innerHTML="00d : 00h : 00m : 00s";
     }
 
     update();
